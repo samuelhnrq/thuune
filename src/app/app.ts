@@ -1,12 +1,18 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, MatButton],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: './app.scss',
 })
 export class App {
-  protected title = 'slva-blog';
+  protected count = signal(0);
+
+  public increment() {
+    this.count.update((value) => value + 1);
+  }
 }
