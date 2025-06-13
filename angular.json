@@ -7,11 +7,16 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "slva-blog": {
+    "thuune": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "path": "src/app/components",
+          "style": "none"
+        },
+        "@schematics/angular:service": {
+          "flat": false,
+          "path": "src/app/services"
         }
       },
       "root": "",
@@ -22,6 +27,14 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
+            "optimization": {
+              "scripts": true,
+              "fonts": true,
+              "styles": {
+                "inlineCritical": true,
+                "minify": true
+              }
+            },
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -68,10 +81,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "slva-blog:build:production"
+              "buildTarget": "thuune:build:production"
             },
             "development": {
-              "buildTarget": "slva-blog:build:development"
+              "buildTarget": "thuune:build:development"
             }
           },
           "defaultConfiguration": "development"
