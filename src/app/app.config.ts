@@ -33,7 +33,7 @@ import {
   provideRemoteConfig,
 } from '@angular/fire/remote-config';
 import { isPlatformBrowser } from '@angular/common';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 
 const firebaseConfig = {
   projectId: 'thuune-slva',
@@ -51,7 +51,7 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    provideHttpClient(),
+    provideHttpClient(withFetch()),
     provideFirebaseApp(() => {
       if (isPlatformBrowser(inject(PLATFORM_ID))) {
         console.log('Initializing Firebase App in Browser');

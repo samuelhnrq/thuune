@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { LandingPage } from './components/landing-page/landing-page';
+import { PageGameSelect } from './components/page-game-select/page-game-select';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: LandingPage },
+  { path: 'games', component: PageGameSelect },
 ];

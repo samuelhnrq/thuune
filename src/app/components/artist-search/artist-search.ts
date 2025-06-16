@@ -1,13 +1,29 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EnvironmentInjector,
+  inject,
+  output,
+  runInInjectionContext,
+  signal,
+} from '@angular/core';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatInputModule } from '@angular/material/input';
 import { MBArtist } from '../../services/music-brainz/music-brainz.model';
-import { debounceTime, mergeMap, Observable, distinctUntilChanged } from 'rxjs';
+import {
+  debounceTime,
+  mergeMap,
+  Observable,
+  distinctUntilChanged,
+  retry,
+  map,
+  merge,
+} from 'rxjs';
 import { MusicBrainz } from '../../services/music-brainz/music-brainz.service';
 import { Analytics, logEvent } from '@angular/fire/analytics';
 
@@ -19,19 +35,28 @@ import { Analytics, logEvent } from '@angular/fire/analytics';
     MatInputModule,
     MatAutocompleteModule,
     ReactiveFormsModule,
+    CommonModule,
+    MatProgressBarModule,
     AsyncPipe,
   ],
   templateUrl: './artist-search.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArtistSearch {
-  myControl = new FormControl<string | MBArtist>('');
-  filteredOptions: Observable<MBArtist[]>;
+  private environmentInjector = inject(EnvironmentInjector);
   private analytics = inject(Analytics);
+
+  protected myControl = new FormControl<string | MBArtist>('');
+  protected searchText = signal<string>('');
+  selected = output<MBArtist>();
+  filteredOptions: Observable<MBArtist[]>;
+  isLoading: Observable<boolean>;
 
   constructor(private search: MusicBrainz) {
     // Initialize filteredOptions with an observable that emits an empty array
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
-      debounceTime(300), // Wait for 300ms pause in events
+      debounceTime(800), // Wait for 300ms pause in events
       distinctUntilChanged(),
       mergeMap((value: string | MBArtist | null) => {
         if (!value) {
@@ -42,7 +67,12 @@ export class ArtistSearch {
         } else {
           return this.search.searchArtist(value.name);
         }
-      })
+      }),
+      retry()
+    );
+    this.isLoading = merge(
+      this.myControl.valueChanges.pipe(map((x) => !!x)),
+      this.filteredOptions.pipe(map(() => false))
     );
   }
 
@@ -56,10 +86,13 @@ export class ArtistSearch {
   }
 
   protected onOptionSelected(event: MBArtist): void {
-    console.log('Selected artist:', event.name);
-    logEvent(this.analytics, 'artist_selected', {
-      artist_name: event.name,
-      artist_id: event.id,
+    this.myControl.reset();
+    this.selected.emit(event);
+    runInInjectionContext(this.environmentInjector, () => {
+      logEvent(this.analytics, 'artist_selected', {
+        artist_name: event.name,
+        artist_id: event.id,
+      });
     });
   }
 }

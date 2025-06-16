@@ -12,7 +12,7 @@ export interface MBArtist {
   name: string;
   'sort-name': string;
   country: string;
-  area: MBArea;
+  area?: MBArea;
   'begin-area'?: MBArea;
   disambiguation?: string;
   'life-span': MBDuraton;

@@ -1,0 +1,7 @@
+<app-artist-search (selected)="onSelected($event)" />
+
+<h2 *ngIf="selectedArtists().length > 0">Selected Artists</h2>
+
+@for (artist of selectedArtists(); track artist.id) {
+<app-artist-display [artist]="artist" />
+}

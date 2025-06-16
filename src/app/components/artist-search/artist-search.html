@@ -13,9 +13,15 @@
       (optionSelected)="onOptionSelected($event.option.value)"
     >
       @for (artist of filteredOptions | async; track artist.id) {
-      <mat-option [value]="artist">{{artist.name}}</mat-option>
+      <mat-option [value]="artist">
+        <div>{{artist.name}}</div>
+        <div [style.font]="'var(--mat-sys-body-small)'">
+          {{artist.area?.name}}
+        </div>
+      </mat-option>
       }
     </mat-autocomplete>
+    <mat-progress-bar *ngIf="isLoading | async" mode="indeterminate" />
   </mat-form-field>
 </form>
 
