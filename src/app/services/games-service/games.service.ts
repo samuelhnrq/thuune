@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
+import type { Auth } from '@angular/fire/auth';
 import {
-  CollectionReference,
-  DocumentData,
-  FirestoreDataConverter,
-  Firestore,
+  type CollectionReference,
+  type DocumentData,
+  type FirestoreDataConverter,
+  type Firestore,
   collection,
-  QueryDocumentSnapshot,
-  SnapshotOptions,
+  type QueryDocumentSnapshot,
+  type SnapshotOptions,
   addDoc,
 } from '@angular/fire/firestore';
-import { Game, gameModel } from './games.model';
+import { type Game, gameModel } from './games.model';
 
 class GameConverter implements FirestoreDataConverter<Game> {
   toFirestore(game: Game): DocumentData {

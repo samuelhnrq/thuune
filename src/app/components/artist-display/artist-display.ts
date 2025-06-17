@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { MBArtist } from '../../services/music-brainz/music-brainz.model';
+import type { MBArtist } from '../../services/music-brainz/music-brainz.model';
 
 @Component({
   selector: 'app-artist-display',

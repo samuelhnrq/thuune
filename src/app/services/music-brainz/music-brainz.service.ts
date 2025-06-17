@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import type { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
-import { MBQueryResult } from './music-brainz.model';
+import type { MBQueryResult } from './music-brainz.model';
 
 const FORBIDDEN = /\+|-|&&|\|\||!|(|)|{|}|[|]|\^|"|~|\*|\?|:|\\|\/|;/g;
 

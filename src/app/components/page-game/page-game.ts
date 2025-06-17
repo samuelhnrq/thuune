@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ArtistSearch } from '../artist-search/artist-search';
 import { ArtistDisplay } from '../artist-display/artist-display';
-import { MBArtist } from '../../services/music-brainz/music-brainz.model';
+import type { MBArtist } from '../../services/music-brainz/music-brainz.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
