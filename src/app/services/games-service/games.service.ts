@@ -1,49 +1,46 @@
-import { Injectable } from '@angular/core';
-import type { Auth } from '@angular/fire/auth';
+import { inject, Injectable } from "@angular/core";
+import { Auth } from "@angular/fire/auth";
 import {
-  type CollectionReference,
   type DocumentData,
   type FirestoreDataConverter,
-  type Firestore,
+  Firestore,
   collection,
   type QueryDocumentSnapshot,
   type SnapshotOptions,
   addDoc,
-} from '@angular/fire/firestore';
-import { type Game, gameModel } from './games.model';
+} from "@angular/fire/firestore";
+import { type Game, gameModel } from "./games.model";
 
-class GameConverter implements FirestoreDataConverter<Game> {
+const converter = {
   toFirestore(game: Game): DocumentData {
     return { ...game };
-  }
-
+  },
   fromFirestore(
     snapshot: QueryDocumentSnapshot<DocumentData, DocumentData>,
-    options?: SnapshotOptions
+    options?: SnapshotOptions,
   ): Game {
     const current = snapshot.data(options) as Game;
     return { ...current, _id: snapshot.id };
-  }
-}
+  },
+} satisfies FirestoreDataConverter<Game>;
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class GamesService {
-  gamesCol: CollectionReference<Game>;
-
-  constructor(private auth: Auth, db: Firestore) {
-    this.gamesCol = collection(db, 'games').withConverter(new GameConverter());
-  }
+  private auth = inject(Auth);
+  private db = inject(Firestore);
+  gamesCol = collection(this.db, "games").withConverter(converter);
 
   async createGame() {
+    console.log(this.auth.currentUser?.uid);
     await addDoc(
       this.gamesCol,
       gameModel.parse({
-        name: 'New Game',
+        name: "New Game",
         answer: crypto.randomUUID(),
         createdBy: this.auth.currentUser?.uid,
-      })
+      }),
     );
   }
 }

@@ -24,7 +24,7 @@ import {
   map,
   merge,
 } from "rxjs";
-import type { MusicBrainz } from "../../services/music-brainz/music-brainz.service";
+import { MusicBrainz } from "../../services/music-brainz/music-brainz.service";
 import { Analytics, logEvent } from "@angular/fire/analytics";
 
 @Component({
@@ -45,6 +45,7 @@ import { Analytics, logEvent } from "@angular/fire/analytics";
 export class ArtistSearch {
   private environmentInjector = inject(EnvironmentInjector);
   private analytics = inject(Analytics);
+  private search = inject(MusicBrainz);
 
   protected myControl = new FormControl<string | MBArtist>("");
   protected searchText = signal<string>("");
@@ -52,7 +53,7 @@ export class ArtistSearch {
   protected isLoading: Observable<boolean>;
   selected = output<MBArtist>();
 
-  constructor(private search: MusicBrainz) {
+  constructor() {
     // Initialize filteredOptions with an observable that emits an empty array
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
