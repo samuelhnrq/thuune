@@ -16,7 +16,7 @@
       <mat-progress-spinner />
       } @else if (cUser !== null) { @if (cUser?.photoURL) {
       <button matIconButton (click)="logout()">
-        <img matCardAvatar [src]="cUser.photoURL" />
+        <img matCardAvatar [src]="cUser.photoURL" alt="Photo of the user" />
       </button>
       } @else {
       <button matIconButton (click)="logout()">

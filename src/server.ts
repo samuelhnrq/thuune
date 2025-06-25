@@ -1,3 +1,4 @@
+import { deleteApp } from '@angular/fire/app';
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
@@ -32,7 +33,7 @@ app.use(
     maxAge: '1y',
     index: false,
     redirect: false,
-  }),
+  })
 );
 
 /**
@@ -41,9 +42,21 @@ app.use(
 app.use((req, res, next) => {
   angularApp
     .handle(req)
-    .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
-    )
+    .then(async (response) => {
+      const firebase = res.locals?.firebaseApp;
+      if (firebase) {
+        try {
+          await deleteApp(firebase);
+        } catch {
+          console.warn('failed to delete firebase app, should be fine');
+        }
+      }
+      if (response) {
+        await writeResponseToNodeResponse(response, res);
+      } else {
+        next();
+      }
+    })
     .catch(next);
 });
 

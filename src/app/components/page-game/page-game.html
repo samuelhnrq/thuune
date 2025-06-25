@@ -1,7 +1,12 @@
+@let game = currentGame | async;
+
+<h1>Game id is {{game?._id}}</h1>
 <app-artist-search (selected)="onSelected($event)" />
 
-<h2 *ngIf="selectedArtists().length > 0">Selected Artists</h2>
-
-@for (artist of selectedArtists(); track artist.id) {
+@if (selectedArtists().length === 0) {
+<h2>No artists selected</h2>
+}@else{
+<h2>Selected Artists</h2>
+} @for (artist of selectedArtists(); track artist.id) {
 <app-artist-display [artist]="artist" />
 }

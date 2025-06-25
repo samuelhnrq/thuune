@@ -1,1 +1,8 @@
 <button matButton="elevated" (click)="createGame()">New Game</button>
+<mat-action-list>
+  @for (item of gameList | async; track item._id) {
+  <a mat-list-item routerLink="/games/{{item._id}}">
+    {{ item.name }} created at {{ item.createdAt | date: 'shortTime' }}
+  </a>
+  }
+</mat-action-list>
